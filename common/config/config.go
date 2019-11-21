@@ -278,7 +278,7 @@ var MainNetConfig = &GenesisConfig{
 		MaxBlockChangeView:   120000,
 		AdminOntID:           "did:ont:AdjfcJgwru2FD8kotCPvLDXYzRjqFjc9Tb",
 		MinInitStake:         100000,
-		PocSpace:             2048,
+		PocSpace:             200,
 		NonceDir:             "../Cache",
 		Peers: []*POCPeerStakeInfo{
 			{
@@ -551,7 +551,7 @@ type POCConfig struct {
 	MinInitStake         uint32              `json:"min_init_stake"`
 	AdminOntID           string              `json:"admin_ont_id"`
 	Peers                []*POCPeerStakeInfo `json:"peers"`
-	PocSpace             uint32              `json:"POC computing space, unit 'M'"`
+	PocSpace             uint64              `json:"POC computing space, unit64 'M'"`
 	NonceDir             string              `json:"Nonce position"`
 }
 
@@ -594,7 +594,7 @@ func (this *POCConfig) Serialize(w io.Writer) error {
 			return errors.NewDetailErr(err, errors.ErrNoCode, "serialize peer error!")
 		}
 	}
-	if err := serialization.WriteUint32(w, this.PocSpace); err != nil {
+	if err := serialization.WriteUint64(w, this.PocSpace); err != nil {
 		return errors.NewDetailErr(err, errors.ErrNoCode, "serialization.WriteUint32, serialize POC computing space error!")
 	}
 
@@ -658,7 +658,7 @@ func (this *POCConfig) Deserialize(r io.Reader) error {
 		}
 		peers = append(peers, peer)
 	}
-	PocSpace, err := serialization.ReadUint32(r)
+	PocSpace, err := serialization.ReadUint64(r)
 	if err != nil {
 		return errors.NewDetailErr(err, errors.ErrNoCode, "serialization.ReadUint32, deserialize PocSpace error!")
 	}

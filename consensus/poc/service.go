@@ -2227,6 +2227,22 @@ func (self *Server) calDeadLine() {
 			} else if fi.Name() == ".DS_Store" {
 				continue
 			} else {
+				nonceFile, err := os.OpenFile(config.DefConfig.Genesis.POC.NonceDir+"/"+fi.Name(), os.O_RDONLY, 0600)
+				if err != nil {
+					log.Error(err)
+				}
+				nonceByte, err := ioutil.ReadAll(nonceFile)
+				if err != nil {
+					log.Error(err)
+				}
+				_ = nonceFile.Close()
+				if len(nonceByte) == 0 {
+					err = os.Remove(config.DefConfig.Genesis.POC.NonceDir + "/" + fi.Name())
+					if err != nil {
+						log.Error(err)
+					}
+					continue
+				}
 				Callshabal("genHash_Target256", []byte(strconv.FormatUint(blk.Block.Header.ConsensusData, 10)),
 					[]byte(strconv.FormatUint(uint64(blk.Info.Proposer), 10)), []byte(fi.Name()),
 					[]byte(config.DefConfig.Genesis.POC.NonceDir), []byte(fi.Name()))

@@ -5,6 +5,8 @@ temp/*
 temp/
 idea/
 build/
+consensus/poc/shabal/target
+consensus/poc/shabal/target/*
 wsl/*
 *.patch
 .idea/
